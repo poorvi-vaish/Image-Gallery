@@ -3,7 +3,7 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage: {
-        'hero-pattern': "url('https://img.freepik.com/free-vector/tropical-leaves-background-zoom_23-2148580778.jpg')",
+        'hero-pattern': "url('https://i.imgur.com/sZkJAG4.png')",
       },
     },
   },

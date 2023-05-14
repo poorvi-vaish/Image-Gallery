@@ -7,8 +7,8 @@ function App() {
   const [dark, setDark] = React.useState(false);
   return (
     <div className="" data-theme={dark? "black" : "light"} >
-      <Header setDark={setDark} dark={dark}/>
-        <Gallery />
+      {/* <Header setDark={setDark} dark={dark}/> */}
+        <Gallery setDark={setDark} dark={dark} />
       
     </div>
   );

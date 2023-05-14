@@ -1,59 +1,68 @@
 import { useEffect, useState } from "react";
 import Card from "./card";
-import { getPhotos } from "../api/getPhotos";
+import { getMovies, getWatchList } from "../api/getMovies";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
-import { searchPhotos } from "../api/searchPhotos";
-import Modal from './modal';
-import { ImageType } from "../types";
+import { Movie } from "../types";
 
-
-const Gallery = () => {
-  const [data, setData] = useState<ImageType[]>();
-  const [search, setSearch] = useState<string>("");
-  const [image, setImage] = useState<ImageType>({} as ImageType);
-
-  const [modal, setModal] = useState<boolean>(false);
-  const [id, setId] = useState<string>("");
-
-  const openModal = (img_id:string) => {
-    setModal(true);
-    setId(img_id);
-    const res= data?.find((item) => item.id === img_id);
-    setImage(res as ImageType);
-
-  };
-
-  const closeModal = () => {
-    setModal(false);
-  };
+const Gallery = ({ dark, setDark }: any) => {
+  const [data, setData] = useState<Movie[]>();
+  const [movies, setMovies] = useState<Movie[]>();
+  const [watchList, setWatchList] = useState<Movie[]>();
+  const id = "1";
 
   const handleSearch = (e: any) => {
-    setSearch(e.target.value);
+    const searchKey = e.target.value;
+    if (searchKey) {
+      const results = data?.filter((item) => {
+        return item.title.toLowerCase().includes(searchKey.toLowerCase());
+      });
+      setData(results);
+    } else {
+      setData(movies);
+    }
   };
 
-  const getImages = async () => {
-    const res = await getPhotos();
-    setData(res);
+  const getMovieList = async () => {
+    const res = await getMovies();
+    setMovies(res.data);
+    setData(res.data);
   };
 
   useEffect(() => {
-    if(search.length>= 2){
-      const searchImages = async () => {
-        const res = await searchPhotos(search);
-        setData(res.results);
-      };
-      searchImages();
-    }
-    else{
-      getImages();
-    }
-  }, [search]);
+    getMovieList();
+  }, []);
 
   return (
-    <div className={modal? "overflow-hidden fixed w-full":""}>
+    <div>
+      <div className="flex p-5 justify-around items-center text-xl">
+        <div>
+          <p className="font-[pattaya]">Movie Store</p>
+        </div>
+        <div className="flex items-center">
+          <span className="p-1">Dark Mode</span>
+          <input
+            type="checkbox"
+            className="toggle"
+            onClick={() => setDark(!dark)}
+          />
+        </div>
+        <div>
+          <div className="collapse absolute top-3 w-72 ">
+            <input type="checkbox" className="peer" />
+            <div className="collapse-title peer-checked:bg-secondary peer-checked:text-secondary-content">
+              My WatchList
+            </div>
+            <div className="collapse-content bg-primary text-primary-content peer-checked:bg-secondary peer-checked:text-secondary-content">
+              <ol>
+                {}
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
       <div className="h-[50vh] w-full bg-cover bg-hero-pattern flex flex-col items-center justify-center">
         <h2 className="text-2xl font-bold p-2 text-white">
-          Download high quality image by creators
+          Search from a huge collection of movies
         </h2>
         <input
           type="text"
@@ -62,26 +71,26 @@ const Gallery = () => {
           onChange={handleSearch}
         />
       </div>
-      <ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 4 }} className="p-2" >
+      <ResponsiveMasonry
+        columnsCountBreakPoints={{ 350: 2, 750: 4, 900: 6 }}
+        className="p-2"
+      >
         <Masonry gutter="1rem">
           {data?.map((item) => (
             <Card
-            key={item.id}
+              key={item.id}
               id={item.id}
-              url={item.urls.small}
-              name={item.user.name}
-              username={item.user.username}
-              profile_image={item.user.profile_image.small}
-              alt_description={item.alt_description}
-              likes={item.likes}
-              openModal={openModal}
+              url={item.url}
+              name={item.title}
+              description={item.description}
+              year={item.year}
+              rating={item.rating}
             />
-            
           ))}
         </Masonry>
       </ResponsiveMasonry>
-      {modal && <Modal id ={id} closeModal={closeModal} image ={image} />}
     </div>
   );
 };
+
 export default Gallery;

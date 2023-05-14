@@ -2,7 +2,7 @@ const Header = ({dark, setDark}:any) => {
   return ( 
     <div className="flex p-5 justify-around items-center text-xl" >
       <div>
-        <p className="font-[pattaya]">Image Gallery</p>
+        <p className="font-[pattaya]">Movie Store</p>
       </div>
       <div className="flex items-center">
         <span className="p-1">Dark Mode</span>

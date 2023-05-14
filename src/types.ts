@@ -1,21 +1,9 @@
-export interface ImageType   {
-  id: string,
-  title: string,
-  urls: {
-    small: string,
-  },
-  user: {
-    name: string,
-    username: string,
-    profile_image: {
-      small: string,
-    },
-  },
-  alt_description: string,
-  likes: number,
-  description: string,
-  tags: [{
-    "title": string
-  }],
-  downloads: number
+export interface Movie {
+  id: number;
+  title: string;
+  description: string;
+  year: number;
+  genre: string[];
+  rating: number;
+  url: string;
 }
